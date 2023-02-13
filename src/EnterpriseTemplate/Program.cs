@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EnterpriseTemplate.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -25,10 +26,14 @@ class Program
             .UseConsoleLifetime(options=>options.SuppressStatusMessages = true)
             .ConfigureAppConfiguration((builder, context) =>
             {
+                builder.HostingEnvironment.EnvironmentName = builder.Configuration["ASPNETCORE_ENVIROMENT"] ?? "Production";
+                context.AddJsonFile("appsettings.json", false);
+                context.AddJsonFile($"appsettings.{builder.HostingEnvironment.EnvironmentName}.json", true);
                 context.AddEnvironmentVariables();
             })
             .ConfigureServices((builder, services) =>
             {
+                services.Configure<EnterpriseTemplateContext>(builder.Configuration.GetSection("Job"));
                 services.AddHostedService<Job>();
             });
        
