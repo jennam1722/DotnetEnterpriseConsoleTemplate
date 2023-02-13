@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EnterpriseTemplate": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIROMENT": "Development"
+      }
+    }
+  }
+}
