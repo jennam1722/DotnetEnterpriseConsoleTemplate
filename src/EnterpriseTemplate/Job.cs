@@ -1,5 +1,6 @@
 ﻿using EnterpriseTemplate.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,16 @@ namespace EnterpriseTemplate
     {
         private readonly IHostApplicationLifetime lifetime;
         private readonly IOptions<EnterpriseTemplateContext> context;
+        private readonly ILogger<Job> logger;
 
         public Job(IHostApplicationLifetime lifetime,
-            IOptions<EnterpriseTemplateContext> context)
+            IOptions<EnterpriseTemplateContext> context,
+            ILogger<Job> logger)
+
         {
             this.lifetime = lifetime;
             this.context = context;
+            this.logger = logger;
         }
 
 
@@ -26,7 +31,8 @@ namespace EnterpriseTemplate
         {
             try
             {
-                Console.WriteLine($"Hello {context.Value.Name}!");
+                logger.LogInformation($"Hello {context.Value.Name}!");
+                logger.LogCritical($"Hello {context.Value.Name}!");
             }
             finally
             {
