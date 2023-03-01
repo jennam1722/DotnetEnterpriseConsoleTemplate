@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace EnterpriseTemplate;
 class Program
@@ -31,8 +32,13 @@ class Program
                 context.AddJsonFile($"appsettings.{builder.HostingEnvironment.EnvironmentName}.json", true);
                 context.AddEnvironmentVariables();
             })
+            .ConfigureLogging((builder, logging) =>
+            {
+                logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+            })
             .ConfigureServices((builder, services) =>
             {
+                services.AddLogging();
                 services.Configure<EnterpriseTemplateContext>(builder.Configuration.GetSection("Job"));
                 services.AddHostedService<Job>();
             });
