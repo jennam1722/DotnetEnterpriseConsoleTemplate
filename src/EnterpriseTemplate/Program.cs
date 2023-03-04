@@ -34,11 +34,12 @@ class Program
             })
             .ConfigureLogging((builder, logging) =>
             {
+                logging.ClearProviders();
+                logging.AddConsole();
                 logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
             })
             .ConfigureServices((builder, services) =>
             {
-                services.AddLogging();
                 services.Configure<EnterpriseTemplateContext>(builder.Configuration.GetSection("Job"));
                 services.AddHostedService<Job>();
             });
