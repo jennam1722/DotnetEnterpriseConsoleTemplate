@@ -38,7 +38,6 @@ class Program
             })
             .ConfigureServices((builder, services) =>
             {
-                services.AddLogging();
                 services.Configure<EnterpriseTemplateContext>(builder.Configuration.GetSection("Job"));
                 services.AddHostedService<Job>();
             });

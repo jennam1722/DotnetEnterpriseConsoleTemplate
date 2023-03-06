@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EnterpriseTemplate
 {
-    public class Job : IHostedService
+    public partial class Job : IHostedService
     {
         private readonly IHostApplicationLifetime lifetime;
         private readonly IOptions<EnterpriseTemplateContext> context;
@@ -27,17 +27,19 @@ namespace EnterpriseTemplate
         }
 
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             try
             {
-                logger.LogInformation($"Hello {context.Value.Name}!");
-                logger.LogCritical($"Hello {context.Value.Name}!");
+                LogInformationHello(context.Value.Name);
+                LogCriticalHello(context.Value.Name);
             }
             finally
             {
                 lifetime.StopApplication();
             }
+
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -45,5 +47,11 @@ namespace EnterpriseTemplate
             lifetime.StopApplication();
             return Task.CompletedTask;
         }
+
+        [LoggerMessage(EventId = 1002, Level = LogLevel.Information, Message = "Hello {name}!")]
+        public partial void LogInformationHello(string name);
+
+        [LoggerMessage(EventId = 1003, Level = LogLevel.Critical, Message = "Hello {name}!")]
+        public partial void LogCriticalHello(string name);
     }
 }
