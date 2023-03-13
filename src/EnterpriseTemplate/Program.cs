@@ -15,15 +15,23 @@ class Program
     }
     internal static IHostBuilder GetHostBuilder(string[]? args)
     {
+        var switchMappings = new Dictionary<string, string>()
+        {
+            { "-v", "Logging:LogLevel:Default" },
+            { "--verbosity", "Logging:LogLevel:Default" },
+            { "-n", "Job:Name" },
+            { "--name", "Job:Name" }
+        };
+
         args ??= Enumerable.Empty<string>().ToArray();
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureHostConfiguration(config =>
             {
-                config.SetBasePath(Directory.GetCurrentDirectory());
+                config.SetBasePath(AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory);
                 config.AddEnvironmentVariables();
                 config.AddCommandLine(args);
             })
-            .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseContentRoot(AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory)
             .UseConsoleLifetime(options=>options.SuppressStatusMessages = true)
             .ConfigureAppConfiguration((builder, context) =>
             {
@@ -31,9 +39,17 @@ class Program
                 context.AddJsonFile("appsettings.json", false);
                 context.AddJsonFile($"appsettings.{builder.HostingEnvironment.EnvironmentName}.json", true);
                 context.AddEnvironmentVariables();
+                context.AddCommandLine(args, switchMappings);
             })
             .ConfigureLogging((builder, logging) =>
             {
+                logging.ClearProviders();
+                logging.AddDebug();
+                logging.AddSimpleConsole(options =>
+                {
+                    options.SingleLine = true;
+                    options.ColorBehavior = Microsoft.Extensions.Logging.Console.LoggerColorBehavior.Disabled;
+                });
                 logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
             })
             .ConfigureServices((builder, services) =>

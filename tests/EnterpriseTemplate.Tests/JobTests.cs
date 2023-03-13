@@ -19,13 +19,13 @@ public class JobTests
         var mocker = new AutoMocker();
         mocker.Use(options);
         var mockLogger = mocker.GetMock<ILogger<Job>>();
-        mockLogger.Setup(a => a.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
+        mockLogger.Setup(a => a.IsEnabled(LogLevel.Information)).Returns(true);
         var job = mocker.CreateInstance<Job>();
         var source = new CancellationTokenSource();
         await job.StartAsync(source.Token);
-
+        mockLogger.VerifyLogMessage(LogLevel.Critical, "Print 10", 0);
         mockLogger.VerifyLogMessage(LogLevel.Information, $"Hello {name}!", 1);
-        mockLogger.VerifyLogMessage(LogLevel.Critical, $"Hello {name}!", 1);
+        mockLogger.VerifyLogMessage(LogLevel.Critical, $"Hello {name}!", 0);
         mocker.VerifyAll();
     }
 }
