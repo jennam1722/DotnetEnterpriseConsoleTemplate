@@ -1,10 +1,13 @@
 ﻿using EnterpriseTemplate.Models;
+using EnterpriseTemplate.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EnterpriseTemplate;
+[ExcludeFromCodeCoverage]
 class Program
 {
     public static async Task Main(string[] args)
@@ -55,6 +58,7 @@ class Program
             .ConfigureServices((builder, services) =>
             {
                 services.Configure<EnterpriseTemplateContext>(builder.Configuration.GetSection("Job"));
+                services.AddSingleton<IDateService, DateService>();
                 services.AddHostedService<Job>();
             });
        

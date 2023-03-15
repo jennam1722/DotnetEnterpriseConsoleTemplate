@@ -1,4 +1,5 @@
 ﻿using EnterpriseTemplate.Models;
+using EnterpriseTemplate.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,15 +16,18 @@ namespace EnterpriseTemplate
         private readonly IHostApplicationLifetime lifetime;
         private readonly IOptions<EnterpriseTemplateContext> context;
         private readonly ILogger<Job> logger;
+        private readonly IDateService dateService;
 
         public Job(IHostApplicationLifetime lifetime,
             IOptions<EnterpriseTemplateContext> context,
-            ILogger<Job> logger)
+            ILogger<Job> logger,
+            IDateService dateService)
 
         {
             this.lifetime = lifetime;
             this.context = context;
             this.logger = logger;
+            this.dateService = dateService;
         }
 
 
@@ -31,6 +35,10 @@ namespace EnterpriseTemplate
         {
             try
             {
+                if(dateService.IsFirstDayOfYear)
+                {
+                    LogCriticalHappyNewYear();
+                }
                 LogInformationHello(context.Value.Name);
                 LogCriticalHello(context.Value.Name);
             }
@@ -53,5 +61,8 @@ namespace EnterpriseTemplate
 
         [LoggerMessage(EventId = 1003, Level = LogLevel.Critical, Message = "Hello {name}!")]
         public partial void LogCriticalHello(string name);
+
+        [LoggerMessage(EventId = 1004, Level = LogLevel.Critical, Message = "Happy New Year")]
+        public partial void LogCriticalHappyNewYear();
     }
 }

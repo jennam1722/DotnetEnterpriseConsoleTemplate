@@ -198,14 +198,14 @@ function Invoke-CompressArtifact {
     )
 
     if (!(Test-Path $Destination)) {
-        New-Item -Path $Destination -ItemType Directory
+        New-Item -Path $Destination -ItemType Directory > $null
     }
 
     $process = [BootstrapExecution]::new()
     $process.StepName = "Compress Artifact"
     $process.StartTime = Get-Date
-    $process.FullCommand = "Compress-Archive -Path $Source/* -DestinationPath $Destination/$ArchiveName"
-    Compress-Archive -Path $Source/* -DestinationPath $Destination/$ArchiveName -Force  2> processError.txt > process.txt
+    $process.FullCommand = """Compress-Archive -Path $Source/* -DestinationPath $Destination/$ArchiveName"""
+    Compress-Archive -Path $Source/* -DestinationPath $Destination/$ArchiveName -Force 2> processError.txt > process.txt 
     ThrowOnNativeFailure -ExecutionInformation $process
     $process.Success = $true
     $process.EndTime = Get-Date
@@ -218,17 +218,9 @@ function Invoke-BootstrapSummary {
         $ExecutionItems
     )
 
-    foreach ($ExecutionItem in $ExecutionItems) {
-        $item = [BootstrapExecution]$ExecutionItem
-        $consoleOutput = $item.StepName + " - " + $item.Success
-        if (!$item.Success) {
-            Write-Host -Message $consoleOutput -ForegroundColor Red
-        }
-        else {
-            Write-Host -Message $consoleOutput
-        }
-    }
-    
+    [BootstrapTable[]] $castedItems = @()
+    $ExecutionItems | ForEach-Object { $castedItems += ConvertToBootstrapTable($_) } 
+    $castedItems | Format-Table
 }
 
 
@@ -259,10 +251,16 @@ function RemoveLogs {
         [BootstrapExecution]$ExecutionInformation
     )
 
-    $process.ErrorOutput = Get-Content processError.txt -Raw
-    $process.ExecutionOutput = Get-Content process.txt -Raw
-    Remove-Item processError.txt  2>&1 > $null
-    Remove-Item process.txt  2>&1 > $null
+    if (Test-Path processError.txt) {
+        $process.ErrorOutput = Get-Content processError.txt -Raw
+        Remove-Item processError.txt  2>&1 > $null
+    }
+
+    if (Test-Path process.txt) {
+        $process.ExecutionOutput = Get-Content process.txt -Raw    
+        Remove-Item process.txt  2>&1 > $null
+    }
+    
 }
 
 function ThrowOnNativeFailure {
@@ -287,6 +285,29 @@ function ThrowOnNativeFailure {
     else {
         RemoveLogs -ExecutionInformation  $ExecutionInformation
     }
+}
+
+function ConvertToBootstrapTable {
+    param(
+        [BootstrapExecution]$ExecutionInformation
+    )  
+
+    $success = switch ($ExecutionInformation.Success) {
+        $true { "Success" }
+        $false { "Failure" }
+    }
+    $process = [BootstrapTable]::new()
+    $process.StepName = $ExecutionInformation.StepName
+    $process.Status = $success
+    $process.Duration = New-TimeSpan -Start $ExecutionInformation.StartTime -End $ExecutionInformation.EndTime
+    return $process
+}
+
+
+class BootstrapTable {
+    [string] $StepName;
+    [string] $Status;
+    [TIMESPAN]$Duration;
 }
 
 class BootstrapExecution {
