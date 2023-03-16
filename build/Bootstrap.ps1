@@ -9,6 +9,7 @@ Param(
 
 $currDir = Get-Location
 Import-Module $PSScriptRoot/Bootstrap-Module.psd1 -Force
+
 Write-Verbose "Bootstrap Verbosity Set: $Verbosity"
 $buildDir = Get-BuildWorkingDirectory -Path '.'
 Write-Verbose "Bootstrap Working Directory: $buildDir"
@@ -39,10 +40,10 @@ $publish = Invoke-DotnetPublish -DotnetPath $DotnetPath -Verbosity $Verbosity
 Invoke-ProcessEcho $DotnetErrorsOnly $publish
 
 Write-Host "Bootstrap: Compress Artifact.."
-Invoke-CompressArtifact -ArchiveName EnterpriseTemplate.zip -Verbosity $Verbosity
-#Invoke-ProcessEcho -DotnetErrorsOnly $DotnetErrorsOnly -ExecutionInformation $artifactToZip
+$compress = Invoke-CompressArtifact -ArchiveName EnterpriseTemplate.zip -Verbosity $Verbosity
+Invoke-ProcessEcho $DotnetErrorsOnly $compress
 
-Invoke-BootstrapSummary -ExecutionItems @($prepareFolders, $clean, $restore, $test, $coverage, $publish)
+Invoke-BootstrapSummary -ExecutionItems @($prepareFolders, $clean, $restore, $test, $coverage, $publish, $compress)
 
 
 Remove-Module Bootstrap-Module
