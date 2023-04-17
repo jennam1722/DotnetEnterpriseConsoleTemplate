@@ -16,18 +16,20 @@ namespace EnterpriseTemplate
         private readonly IHostApplicationLifetime lifetime;
         private readonly IOptions<EnterpriseTemplateContext> context;
         private readonly ILogger<Job> logger;
-        private readonly IDateService dateService;
+        private readonly IFirstDayOfYearService firstDayOfYearService;
+      
 
         public Job(IHostApplicationLifetime lifetime,
             IOptions<EnterpriseTemplateContext> context,
             ILogger<Job> logger,
-            IDateService dateService)
+            IFirstDayOfYearService firstDayOfYearService)
 
         {
             this.lifetime = lifetime;
             this.context = context;
             this.logger = logger;
-            this.dateService = dateService;
+            this.firstDayOfYearService = firstDayOfYearService;
+
         }
 
 
@@ -35,7 +37,7 @@ namespace EnterpriseTemplate
         {
             try
             {
-                if(dateService.IsFirstDayOfYear)
+                if(firstDayOfYearService.IsFirstDayOfYear())
                 {
                     LogCriticalHappyNewYear();
                 }
