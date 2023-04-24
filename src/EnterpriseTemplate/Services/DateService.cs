@@ -10,6 +10,6 @@ namespace EnterpriseTemplate.Services
     {
         public DateTime Today => DateTime.Today;
 
-        public bool IsFirstDayOfYear => Today.ToString("MMdd").Equals("0101");
+        
     }
 }

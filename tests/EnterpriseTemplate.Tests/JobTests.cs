@@ -32,17 +32,19 @@ public class JobTests
     }
 
 
-    [DataRow("2023-03-01", 0)]
-    [DataRow("2023-01-01", 1)]
+    [DataRow("2023-03-01", 0, false)]
+    [DataRow("2023-01-01", 1, true)]
     [TestMethod]
-    public async Task Job_Happy_NewYear_ShouldWork(string dateVal, int happyNewYearCallCount)
+    public async Task Job_Happy_NewYear_ShouldWork(string dateVal, int happyNewYearCallCount, bool newYearReturn)
     {
         var options = Options.Create(new EnterpriseTemplateContext() { Name = "Test" });
         var mocker = new AutoMocker();
         mocker.Use(options);
         var mockDateService = mocker.GetMock<IDateService>();
         mockDateService.Setup(a => a.Today).Returns(DateTime.Parse(dateVal));
-        mockDateService.Setup(a => a.IsFirstDayOfYear).Returns(DateTime.Parse(dateVal).ToString("MMdd").Equals("0101"));
+        var mockFirstDateOfYearService = mocker.GetMock<IFirstDayOfYearService>();
+        mockFirstDateOfYearService.Setup(a => a.IsFirstDayOfYear()).Returns(newYearReturn);
+
         var mockLogger = mocker.GetMock<ILogger<Job>>();
         mockLogger.Setup(a => a.IsEnabled(LogLevel.Critical)).Returns(true);
         var job = mocker.CreateInstance<Job>();

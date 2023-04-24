@@ -59,6 +59,7 @@ class Program
             {
                 services.Configure<EnterpriseTemplateContext>(builder.Configuration.GetSection("Job"));
                 services.AddSingleton<IDateService, DateService>();
+                services.AddSingleton<IFirstDayOfYearService, FirstDayOfYearService>();
                 services.AddHostedService<Job>();
             });
        

@@ -79,8 +79,8 @@ function Invoke-DotnetRestore {
     $sln = Get-ChildItem -Path $Path -Include *.sln -Recurse
     $packagesFolder = Join-Path -Path $Path -ChildPath $Folder
     $packagesFolder = $packagesFolder.TrimEnd('/').TrimEnd('\')
-    $process.FullCommand = $DotnetPath + "restore ""$($sln.FullName)"" --verbosity $Verbosity --source $NugetSource.AbsoluteUri --packages $packagesFolder --force"
-    & $DotnetPath restore ""$($sln.FullName)"" --verbosity $Verbosity --source $NugetSource.AbsoluteUri --packages $packagesFolder --force 2> processError.txt > process.txt    
+    $process.FullCommand = $DotnetPath + " restore ""$($sln.FullName)"" --verbosity $Verbosity --source $($NugetSource.AbsoluteUri) --packages $packagesFolder --force"
+    & $DotnetPath restore ""$($sln.FullName)"" --verbosity $Verbosity --source $($NugetSource.AbsoluteUri) --packages $packagesFolder --force 2> processError.txt > process.txt    
     ThrowOnNativeFailure -ExecutionInformation $process
     $process.Success = $true
     $process.EndTime = Get-Date
