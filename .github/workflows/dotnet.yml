@@ -24,5 +24,4 @@ jobs:
       run: dotnet restore
     - name: Build
       run: |
-        ls
-      shell: pwsh
+        pwsh -File build/bootstrap.ps1
