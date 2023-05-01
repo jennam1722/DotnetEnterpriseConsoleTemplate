@@ -25,4 +25,4 @@ jobs:
         & ./build/Bootstrap.ps1
       shell: pwsh
     - name: Write to Job Summary
-      run: cat ./build/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+      run: cat ./CodeCoverage/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
