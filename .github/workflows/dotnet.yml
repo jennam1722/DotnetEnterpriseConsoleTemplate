@@ -25,4 +25,4 @@ jobs:
     - name: Build
       shell: pwsh
       run: |
-        ./build/bootstrap.ps1
+        build/bootstrap.ps1
