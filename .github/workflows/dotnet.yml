@@ -26,3 +26,8 @@ jobs:
       run: |
         & ./build/Bootstrap.ps1
       shell: pwsh
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: ./CodeCoverage/index.html
