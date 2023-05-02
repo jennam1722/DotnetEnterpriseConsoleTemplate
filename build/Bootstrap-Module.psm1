@@ -130,12 +130,12 @@ function Invoke-ReportGeneratorCoverage {
     $TestResults = Get-ChildItem -Path projectTests -Include coverage.opencover.xml -Recurse
     foreach ($TestResult in $TestResults) {
         $filePth = $TestResult.FullName
-        $cmd += "$rgdll ""-reports:$filePth"" ""-targetdir:CodeCoverage"" ""-reporttypes:HtmlInline;Badges"" ""-verbosity=$Verbosity"""
+        $cmd += "$rgdll ""-reports:$filePth"" ""-targetdir:CodeCoverage"" ""-reporttypes:HtmlInline;Badges;MarkdownSummaryGithub"" ""-verbosity=$Verbosity"""
     }
     $process.FullCommand = $cmd
     foreach ($TestResult in $TestResults) {
         $filePth = $TestResult.FullName
-        & $DotnetPath $rgdll """-reports:$filePth""" """-targetdir:CodeCoverage""" """-reporttypes:HtmlInline;Badges""" """-verbosity=$Verbosity""" --verbosity $Verbosity 2> processError.txt > process.txt  
+        & $DotnetPath $rgdll """-reports:$filePth""" """-targetdir:CodeCoverage""" """-reporttypes:HtmlInline;Badges;MarkdownSummaryGithub""" """-verbosity=$Verbosity""" --verbosity $Verbosity 2> processError.txt > process.txt  
         ThrowOnNativeFailure -ExecutionInformation $process
     }   
     $process.Success = $true
