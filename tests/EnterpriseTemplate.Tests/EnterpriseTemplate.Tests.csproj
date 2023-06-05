@@ -1,12 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<PackageType>Template</PackageType>
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPublishable>false</IsPublishable>
-		<IsPackable>false</IsPackable>
+		<ProjectGuid>{CE593025-8634-42F9-B076-F57E96FB91EE}</ProjectGuid>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove=".template-config\**" />
+	  <EmbeddedResource Remove=".template-config\**" />
+	  <None Remove=".template-config\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
