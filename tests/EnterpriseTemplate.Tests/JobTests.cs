@@ -55,7 +55,7 @@ public class JobTests
     }
 
     [TestMethod]
-    public async Task Job_StopAsync_ShouldWork()
+    public void Job_StopAsync_ShouldWork()
     {
         var options = Options.Create(new EnterpriseTemplateContext() { Name = "Test" });
         var mocker = new AutoMocker();
