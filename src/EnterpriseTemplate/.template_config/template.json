@@ -8,28 +8,20 @@
     "Console"
   ],
   "name": "Enterprise Console Template",
-  "groupIdentity": "jennam.Enterprise.Template",
-  "shortName": "enterprise-console",
+  "identity": "jennam.Enterprise.Console.Src.Template",
+  "groupIdentity": "jennam.Enterprise.Console.Template",
+  "shortName": "enterprise-console-src",
   "tags": {
-    "language": "C#"
+    "language": "C#",
+    "type": "project"
   },
   "sourceName": "EnterpriseTemplate",
   "guids": [
     "{FAC61ACA-7B9C-48CE-9978-D61F2B46CD3C}"
   ],
-  "sources": [
-    {
-      "modifiers": [
-        {
-          "exclude": [ ".template_config/**" ]
-        }
-      ]
-    }
-  ],
   "exclude": [
     "**/[Bb]in/**",
     "**/[Oo]bj/**",
-    ".template.config/**/*",
     "**/*.lock.json"
   ]
 }

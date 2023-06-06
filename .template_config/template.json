@@ -8,15 +8,18 @@
     "Console"
   ],
   "name": "Enterprise Console Template",
-  "identity": "jennam.Enterprise.Console.Tests.Template",
+  "identity": "jennam.Enterprise.Console.Template",
   "groupIdentity": "jennam.Enterprise.Console.Template",
-  "shortName": "enterprise-console-tests",
+  "shortName": "enterprise-console",
+  "preferNameDirectory": true,
+  "preferDefaultName": false,  
   "tags": {
     "language": "C#",
-    "type": "project"
+    "type": "solution"
   },
   "sourceName": "EnterpriseTemplate",
   "guids": [
+    "{FAC61ACA-7B9C-48CE-9978-D61F2B46CD3C}",
     "{CE593025-8634-42F9-B076-F57E96FB91EE}"
   ],
   "exclude": [

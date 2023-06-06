@@ -16,7 +16,7 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <Version>1.0.8</Version>
+    <Version>1.0.14</Version>
     <PackageId>jennam.Enterprise.Template</PackageId>
     <Title>Enterprise Console Template</Title>
     <Authors>jennam1722;niederee;smsmith8413</Authors>
