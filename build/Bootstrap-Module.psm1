@@ -49,13 +49,16 @@ function Invoke-DotnetClean {
     $process.StepName = "Dotnet Clean"
     $process.StartTime = Get-Date
     if (!$ProjectFile) {
-        $execPath = ""
+        $sln = Get-ChildItem -Path $Path -Include *.sln -Recurse
+        $process.FullCommand = "$DotnetPath clean ""$($sln.FullName)"" --verbosity $Verbosity --nologo"
+        & $DotnetPath clean ""$($sln.FullName)"" --verbosity $Verbosity 2> processError.txt > process.txt 
     }
     else {
         $execPath = " ""$ProjectFile"""
+        $process.FullCommand = "$DotnetPath clean$execPath --verbosity $Verbosity --nologo"
+        & $DotnetPath clean$execPath --verbosity $Verbosity 2> processError.txt > process.txt 
     }
-    $process.FullCommand = "$DotnetPath clean$execPath --verbosity $Verbosity --nologo"
-    & $DotnetPath clean$execPath --verbosity $Verbosity 2> processError.txt > process.txt    
+   
     ThrowOnNativeFailure -ExecutionInformation $process
     $process.Success = $true
     $process.EndTime = Get-Date
@@ -173,17 +176,19 @@ function Invoke-DotnetBuild {
 function Invoke-DotnetPublish {
     param(
         $DotnetPath = "dotnet",
+        [string]$ProjectFile,
         [Parameter(Mandatory = $true)]
         [ValidateSet('quiet', 'minimal', 'normal', 'detailed', 'diagnostic')]
         [string]$Verbosity,
         [string]$Folder = "ArtifactsRaw",
+        [string]$Framework = "net7.0",
         [Uri]$NugetSource = "https://api.nuget.org/v3/index.json"
     )
     $process = [BootstrapExecution]::new()
     $process.StepName = "Dotnet Publish"
     $process.StartTime = Get-Date
-    $process.FullCommand = "$DotnetPath publish --output ArtifactsRaw -c Release --self-contained --source $NugetSource --verbosity $Verbosity"
-    & $DotnetPath publish  --output ArtifactsRaw -c Release --self-contained --source """$NugetSource""" --verbosity $Verbosity 2> processError.txt > process.txt  
+    $process.FullCommand = "$DotnetPath publish $($ProjectFile) --output ArtifactsRaw -c Release --self-contained --framework $Framework --source $NugetSource --verbosity $Verbosity"
+    & $DotnetPath publish $($ProjectFile)  --output ArtifactsRaw -c Release --self-contained --framework $Framework --source """$NugetSource""" --verbosity $Verbosity 2> processError.txt > process.txt  
     ThrowOnNativeFailure -ExecutionInformation $process
     $process.Success = $true
     $process.EndTime = Get-Date

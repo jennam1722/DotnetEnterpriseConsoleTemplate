@@ -36,7 +36,7 @@ $coverage = Invoke-ReportGeneratorCoverage -DotnetPath $DotnetPath -NetVersion "
 Invoke-ProcessEcho $DotnetErrorsOnly $coverage
 
 Write-Host "Bootstrap: Dotnet Publish.."
-$publish = Invoke-DotnetPublish -DotnetPath $DotnetPath -Verbosity $Verbosity
+$publish = Invoke-DotnetPublish -DotnetPath $DotnetPath -ProjectFile "src/EnterpriseTemplate/EnterpriseTemplate.csproj" -Verbosity $Verbosity
 Invoke-ProcessEcho $DotnetErrorsOnly $publish
 
 Write-Host "Bootstrap: Compress Artifact.."
